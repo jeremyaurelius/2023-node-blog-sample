@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <%- include('../partials/head.ejs') %>
+
+  <body>
+
+    <%- include('../partials/nav.ejs') %>
+
+    <div class="details content">
+      <h2><%= blogPost.title %></h2>
+      <div class="content">
+        <p>
+          <%= blogPost.body %>
+        </p>
+      </div>
+      <button class="delete" data-doc="<%= blogPost._id %>">
+        <img src="/trash-can.svg" alt="delete" />
+      </button>
+    </div>
+
+    <%- include('../partials/footer.ejs') %>
+
+    <script>
+      const deleteButton = document.querySelector('.delete');
+      const onClick = async () => {
+        const endpoint = `/api/blog-posts/${deleteButton.dataset.doc}`;
+        try {
+          await fetch(endpoint, {
+            method: 'DELETE',
+          });
+          // since we're doing an AJAX request, we cannot do a server redirect here
+          // so we need to redirect on the frontend
+          location.pathname = 'blog';
+        } catch (e) {
+          console.log('[debug] error', e);
+        }
+      };
+      deleteButton.addEventListener('click', onClick);
+    </script>
+
+  </body>
+</html>
